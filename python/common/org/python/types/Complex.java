@@ -698,7 +698,7 @@ public class Complex extends org.python.types.Object {
             __doc__ = "float(self)"
     )
     public org.python.Object __float__() {
-        throw new org.python.exceptions.NotImplementedError("complex.__float__ has not been implemented.");
+        throw new org.python.exceptions.TypeError("can't convert complex to float");
     }
 
     @org.python.Method(
