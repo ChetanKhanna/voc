@@ -603,6 +603,25 @@ class BytesTests(TranspileTestCase):
         print(b'\r\n\r\n\v\f\x0b\x0c\u2029\x1c\x1d\x1e\x85'.splitlines())
         print(b'\r\n\r\n\v\f\x0b\x0c\u2029\x1c\x1d\x1e\x85'.splitlines(keepends = True))
         """)
+        
+    def test_zfill(self):
+        self.assertCodeExecution("""
+        try:
+            print(b'12345'.zfill())
+        except Exception as e:
+            print(str(e))
+        try:
+            print(b'12345'.zfill(4.5))
+        except Exception as e:
+            print(str(e))
+        try:
+            print(b'12345'.zfill([1,2]))
+        except Exception as e:
+            print(str(e))
+        print(b'12345'.zfill(3))
+        print(b'12345'.zfill(-2))
+        print(b'-12345'.zfill(10))
+        """)    
 
 
 class UnaryBytesOperationTests(UnaryOperationTestCase, TranspileTestCase):
