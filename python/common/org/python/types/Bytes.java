@@ -1710,15 +1710,54 @@ public class Bytes extends org.python.types.Object {
 
     @org.python.Method(
             __doc__ = "B.upper() -> copy of B\n\nReturn a copy of B with all ASCII characters converted to uppercase."
-    )
+    ) 
     public org.python.Object upper() {
         return new Bytes(_upper(this.value));
     }
 
     @org.python.Method(
-            __doc__ = "B.zfill(width) -> copy of B\n\nPad a numeric string B with zeros on the left, to fill a field\nof the specified width.  B is never truncated."
+            __doc__ = "B.zfill(width) -> copy of B\n\n"+
+                      "Pad a numeric string B with zeros on the left, to fill a field\n"+
+                      "of the specified width. B is never truncated.",
+            default_args = {"width"}
     )
-    public org.python.Object zfill(java.util.List<org.python.Object> args, java.util.Map<java.lang.String, org.python.Object> kwargs, java.util.List<org.python.Object> default_args, java.util.Map<java.lang.String, org.python.Object> default_kwargs) {
-        throw new org.python.exceptions.NotImplementedError("bytes.zfill has not been implemented.");
+    public org.python.Object zfill(org.python.Object width) {
+        if (width == null) {
+            throw new org.python.exceptions.TypeError("zfill() takes exactly 1 argument (0 given)");
+        } else if (width instanceof org.python.types.Float) {
+            throw new org.python.exceptions.TypeError("integer argument expected, got float");
+        } else if (!(width instanceof org.python.types.Int)) {
+            throw new org.python.exceptions.TypeError("'" + org.Python.typeName(width.getClass()) +
+                                                      "' object cannot be interpreted as an integer");
+        }
+        
+        int W = (int)((org.python.types.Int)width).value;
+        
+        if (this.value.length >= W) {
+            return new org.python.types.Bytes(this.value);
+        }
+        
+        byte[] result = new byte[W];
+        if (this.value[0] == '-' || this.value[0] == '+') {
+            if (this.value[0] == '-') {
+                result[0] = '-';
+            }
+            else {
+                result[0] = '+';
+            }
+            for (int i = 1; i < W - this.value.length + 1; i++) {
+                result[i] = '0';
+            }
+            System.arraycopy(this.value, 1, result, W - this.value.length + 1, this.value.length-1);
+        }
+        else {
+            for (int i = 0; i < W - this.value.length; i++) {
+                result[i] = '0';
+            }
+            System.arraycopy(this.value, 0, result, W - this.value.length, this.value.length);
+        }
+        
+        return (new org.python.types.Bytes(result));
+                     
     }
 }
