@@ -592,6 +592,17 @@ class BytesTests(TranspileTestCase):
             print(b.join([b'1',b'd',b'<']))
             print(b.join([b'12']))
         """)
+        
+    def test_splitlines(self):
+        self.assertCodeExecution(r"""
+        print(b"aaa\nbbb\rccc\r\nddd\n\reee".splitlines())
+        print(b"aaa\nbbb\rccc\r\nddd\n\reee".splitlines(keepends = True))
+        print(b'check\r\nsplit\n\nlines\t\twith\fvoc'.splitlines())
+        print(b'\n\n\n\n\t'.splitlines())
+        print(b''.splitlines())
+        print(b'\r\n\r\n\v\f\x0b\x0c\u2029\x1c\x1d\x1e\x85'.splitlines())
+        print(b'\r\n\r\n\v\f\x0b\x0c\u2029\x1c\x1d\x1e\x85'.splitlines(keepends = True))
+        """)
 
 
 class UnaryBytesOperationTests(UnaryOperationTestCase, TranspileTestCase):
