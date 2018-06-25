@@ -831,8 +831,11 @@ class StrTests(TranspileTestCase):
 
     def test_splitlines(self):
         self.assertCodeExecution(r"""
+        try:
+            print("hello\r\rworld".splitlines(4.5))
+        except Exception as e:
+            print(str(e))
         str_ = "aaa\nbbb\rccc\r\nddd\n\reee"
-
         print(str_.splitlines())
         print(str_.splitlines(True))
         print("Don't Panic\n".splitlines())

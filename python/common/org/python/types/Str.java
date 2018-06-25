@@ -1618,6 +1618,9 @@ public class Str extends org.python.types.Object {
         if (keepends == null) {
             keepends = org.python.types.Bool.FALSE;
         }
+        if (keepends instanceof org.python.types.Float) {
+            throw new org.python.exceptions.TypeError("integer argument expected, got float");
+        }
 
         org.python.types.List result = new org.python.types.List();
         char current;

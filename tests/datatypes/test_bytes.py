@@ -595,6 +595,10 @@ class BytesTests(TranspileTestCase):
         
     def test_splitlines(self):
         self.assertCodeExecution(r"""
+        try:
+            print(b'Hello\n\t\rWorld'.splitlines(4.5))
+        except Exception as e:
+            print(str(e))
         print(b"aaa\nbbb\rccc\r\nddd\n\reee".splitlines())
         print(b"aaa\nbbb\rccc\r\nddd\n\reee".splitlines(keepends = True))
         print(b'check\r\nsplit\n\nlines\t\twith\fvoc'.splitlines())
