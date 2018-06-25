@@ -1571,11 +1571,63 @@ public class Bytes extends org.python.types.Object {
         return result_list;
     }
 
-    @org.python.Method(
-            __doc__ = "B.splitlines([keepends]) -> list of lines\n\nReturn a list of the lines in B, breaking at line boundaries.\nLine breaks are not included in the resulting list unless keepends\nis given and true."
+        @org.python.Method(
+            __doc__ = "B.splitlines([keepends]) -> list of bytes\n" +
+                    "\n" +
+                    "Return a list of the lines in B, breaking at line boundaries.\n" +
+                    "Line breaks are not included in the resulting list unless keepends\n" +
+                    "is given and true.\n",
+            default_args = {"keepends"}
     )
-    public org.python.Object splitlines(java.util.List<org.python.Object> args, java.util.Map<java.lang.String, org.python.Object> kwargs, java.util.List<org.python.Object> default_args, java.util.Map<java.lang.String, org.python.Object> default_kwargs) {
-        throw new org.python.exceptions.NotImplementedError("bytes.splitlines has not been implemented.");
+    public org.python.Object splitlines(org.python.Object keepends) {
+        if (keepends == null) {
+            keepends = org.python.types.Bool.FALSE;
+        }
+
+        org.python.types.List result = new org.python.types.List();
+        byte current;
+
+        int start = 0;
+        int end;
+        int start_extra;
+        boolean skip = false;
+
+        for (int i = 0; i < this.value.length; i++) {
+            current = this.value[i];
+            byte next = current;
+
+            if (i < this.value.length - 1) {
+                next = this.value[i + 1];
+            }
+
+            if (current == '\n' || current == '\r') {
+                end = i;
+                if (current == '\r' && next == '\n') {
+                    skip = true;
+                    start_extra = 1;
+                    if (keepends.toBoolean()) {
+                        end++;
+                    }
+                } else {
+                    start_extra = 0;
+                }
+                if (keepends.toBoolean()) {
+                    end++;
+                }
+                result.append(new org.python.types.Bytes(Arrays.copyOfRange(this.value, start, end)));
+                start = i + 1 + start_extra;
+                if (skip) {
+                    skip = false;
+                    i++;
+                }
+            }
+        }
+//        bytes[] last = (org.python.types.Bytes)Arrays.copyOfRange(this.value, start, this.value.length);
+        if (this.value.length > start) {
+            result.append(new org.python.types.Bytes(Arrays.copyOfRange(this.value, start, this.value.length)));
+        }
+        return result;
+
     }
 
     @org.python.Method(
